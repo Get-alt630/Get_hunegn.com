@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Exam System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .exam-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+        .timer-container {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+        .time-warning {
+            background-color: #e74c3c;
+            animation: Getahun 1s infinite;
+        }
+        @keyframes Getahun {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .question-container {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .question-text {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+        .option {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background-color: #f8f9fa;
+        }
+        .option.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        .prev-btn {
+            background-color: #7f8c8d;
+            color: white;
+        }
+        .next-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .submit-btn {
+            background-color: #57538e;
+            color: white;
+            font-weight: bold;
+        }
+        .progress-container {
+            margin-top: 20px;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #2ecc71;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .question-numbers {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .question-number {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: #ecf0f1;
+            cursor: pointer;
+        }
+        .question-number.answered {
+            background-color: #2ecc71;
+            color: white;
+        }
+        .question-number.current {
+            border: 2px solid #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="exam-container">
+        <h1>Online Examination</h1>
+        <div class="timer-container" id="timer">
+            Time Remaining: 30:00
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="question-numbers" id="questionNumbers"></div>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-text" id="questionText"></div>
+            <div class="options" id="optionsContainer"></div>
+        </div>
+        
+        <div class="navigation">
+            <button class="prev-btn" id="prevBtn" disabled>Previous</button>
+            <button class="next-btn" id="nextBtn">Next</button>
+            <button class="submit-btn" id="submitBtn">Submit Exam</button>
+        </div>
+    </div>
+<a href="home.html">back to home</a>
+
+    <script>
+        // Exam configuration
+        const examDuration = 30 * 60; // 30 minutes in seconds
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Paris", "Berlin", "Madrid"],
+                answer: "Paris"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                answer: "Mars"
+            },
+            {
+                question: "What is 2 + 2?",
+                options: ["3", "4", "5", "6"],
+                answer: "4"
+            },
+            {
+                question: "Who painted the Mona Lisa?",
+                options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+                answer: "Leonardo da Vinci"
+            },
+            {
+                question: "What is the largest ocean on Earth?",
+                options: ["Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Pacific Ocean"],
+                answer: "Pacific Ocean"
+            }
+        ];
+
+        // DOM elements
+        const timerElement = document.getElementById('timer');
+        const questionTextElement = document.getElementById('questionText');
+        const optionsContainer =document.getElementById('optionsContainer');
+        const prevBtn =document.getElementById('prevBtn');
+        const nextBtn =document.getElementById('nextBtn');
+        const submitBtn =document.getElementById('submitBtn');
+        const questionNumbersElement = document.getElementById('questionNumbers');
+        const progressFillElement = document.getElementById('progressFill');
+
+        // Exam state
+        let currentQuestionIndex = 0;
+        let timeLeft = examDuration;
+        let userAnswers = new Array(questions.length).fill(null);
+        let timerInterval;
+        let examSubmitted = false;
+
+        // Initialize exam
+        function initExam() {
+            // Create question number indicators
+            questions.forEach((_, index) => {
+                const questionNumber = document.createElement('div');
+                questionNumber.className = 'question-number';
+                questionNumber.textContent = index + 1;
+                questionNumber.addEventListener('click', () => navigateToQuestion(index));
+                questionNumbersElement.appendChild(questionNumber);
+            });
+
+            // Start timer
+            timerInterval = setInterval(updateTimer, 1000);
+            
+            // Display first question
+            displayQuestion();
+            updateProgress();
+        }
+
+        // Update timer display
+        function updateTimer() {
+            timeLeft--;
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                submitExam();
+                return;
+            }
+            
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerElement.textContent = `Time Remaining: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Change color when 5 minutes left
+            if (timeLeft <= 3 * 60) {
+                timerElement.classList.add('time-warning');
+            }
+        }
+
+        // Display current question
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            questionTextElement.textContent = `Question ${currentQuestionIndex + 1}: ${question.question}`;
+            
+            // Clear previous options
+            optionsContainer.innerHTML = '';
+            
+            // Create new options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = `option ${userAnswers[currentQuestionIndex] === option ? 'selected' : ''}`;
+                optionElement.textContent = option;
+                optionElement.addEventListener('click', () => selectAnswer(option));
+                optionsContainer.appendChild(optionElement);
+            });
+            
+            // Update navigation buttons
+            prevBtn.disabled = currentQuestionIndex === 0;
+            nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+            
+            // Update question number indicators
+            updateQuestionIndicators();
+        }
+
+        // Select an answer
+        function selectAnswer(answer) {
+            userAnswers[currentQuestionIndex] = answer;
+            displayQuestion();
+            updateProgress();
+        }
+        // Navigate to a specific question
+        function navigateToQuestion(index) {
+            currentQuestionIndex = index;
+            displayQuestion();
+        }
+
+        // Navigate to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        // Update question number indicators
+        function updateQuestionIndicators() {
+            const indicators = questionNumbersElement.querySelectorAll('.question-number');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.remove('current', 'answered');
+                if (index === currentQuestionIndex) {
+                    indicator.classList.add('current');
+                }
+                if (userAnswers[index] !== null) {
+                    indicator.classList.add('answered');
+                }
+            });
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const answeredCount = userAnswers.filter(answer => answer !== null).length;
+            const progress = (answeredCount / questions.length) * 100;
+            progressFillElement.style.width = `${progress}%`;
+        }
+
+        // Submit exam
+        function submitExam() {
+            if (examSubmitted) return;
+            
+            examSubmitted = true;
+            clearInterval(timerInterval);
+            
+            // Calculate score
+            let score = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === questions[index].answer) {
+                    score++;
+                }
+            });
+            
+            // Show results
+            questionTextElement.textContent = `Exam Completed! Your score: ${score}/${questions.length}`;
+            optionsContainer.innerHTML = '';
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            submitBtn.disabled = true;
+            
+            // Show correct answers
+            const resultsDiv = document.createElement('div');
+            resultsDiv.innerHTML = '<h3>Review Answers:</h3>';
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.style.marginBottom = '15px';
+                
+                const questionText = document.createElement('p');
+                questionText.textContent = `${index + 1}. ${question.question}`;
+                questionText.style.fontWeight = 'bold';
+                questionDiv.appendChild(questionText);
+                
+                const userAnswer = document.createElement('p');
+                userAnswer.textContent = `Your answer: ${userAnswers[index] || 'Not answered'}`;
+                userAnswer.style.color = userAnswers[index] === question.answer ? 'green' : 'red';
+                questionDiv.appendChild(userAnswer);
+                
+                if (userAnswers[index] !== question.answer) {
+                    const correctAnswer = document.createElement('p');
+                    correctAnswer.textContent = `Correct answer: ${question.answer}`;
+                    correctAnswer.style.color = 'green';
+                    questionDiv.appendChild(correctAnswer);
+                }
+                
+                resultsDiv.appendChild(questionDiv);
+            });
+            
+            optionsContainer.appendChild(resultsDiv);
+        }
+
+        // Event listeners
+        prevBtn.addEventListener('click', prevQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+        submitBtn.addEventListener('click', () => {
+            if (confirm('Are you sure you want to submit your exam?')) {
+                submitExam();
+            }
+        });
+
+        // Start the exam
+        initExam();
+    </script>
+</body>
+</html>
