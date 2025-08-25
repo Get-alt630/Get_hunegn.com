@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Study Schedule Generator</title>
+    <link rel="stylesheet" href="studyprogram.css">
+    <script>
+        function prin(){
+window.print();// to print when is called
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <h1> Study Schedule Generator</h1>
+        <p>Create a personalized study plan for your 10 subjects with optimal breaks and class times</p>
+    </header>
+    <div class="container">
+        <div class="input-section">
+            <h2>Your Study Preferences</h2>
+            <div class="form-group">
+                <label for="wake-up">Wake-up Time</label>
+                <input type="time" id="wake-up" value="07:00">
+            </div>
+            <div class="form-group">
+                <label for="bedtime">Bedtime</label>
+                <input type="time" id="bedtime" value="23:00">
+            </div>
+            <div class="form-group">
+                <label for="study-duration">Preferred Study Session Duration (minutes)</label>
+                <input type="number" id="study-duration" value="50" min="15" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label for="break-duration">Break Duration Between Sessions (minutes)</label>
+                <input type="number" id="break-duration" value="10" min="5" max="30">
+            </div>
+            
+            <div class="form-group">
+                <label for="long-break">Long Break After (number of sessions)</label>
+                <input type="number" id="long-break" value="3" min="1" max="6">
+            </div>
+            
+            <div class="form-group">
+                <label for="long-break-duration">Long Break Duration (minutes)</label>
+                <input type="number" id="long-break-duration" value="30" min="15" max="60">
+            </div>
+            
+            <h3>Your Class Schedule</h3>
+            <div class="form-group">
+                <label for="class-days">Class Days</label>
+                <select id="class-days" multiple size="5">
+                    <option value="0">Monday</option>
+                    <option value="1">Tuesday</option>
+                    <option value="2">Wednesday</option>
+                    <option value="3">Thursday</option>
+                    <option value="4">Friday</option>
+                    <option value="5">Saturday</option>
+                    <option value="6">Sunday</option>
+                </select>
+                <small>Hold Ctrl to select multiple days</small>
+            </div>
+            
+            <div class="form-group">
+                <label for="class-time">Class Time Range</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="time" id="class-start" value="09:00" style="flex: 1;">
+                    <input type="time" id="class-end" value="15:00" style="flex: 1;">
+                </div>
+            </div>
+            
+            <h3>Your 10 Subjects</h3>
+            <div class="subject-inputs">
+                <div class="subject-card">
+                    <h4>Subject 1</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="5" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 2</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="5" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 3</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="4" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 4</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="4" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 5</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="3" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 6</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="3" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 7</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="3" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 8</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="3" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 9</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="2" min="1" max="20">
+                </div>
+                <div class="subject-card">
+                    <h4>Subject 10</h4>
+                    <label>Priority</label>
+                    <select class="subject-priority">
+                        <option value="3">High</option>
+                        <option value="2" selected>Medium</option>
+                        <option value="1">Low</option>
+                    </select>
+                    <label>Weekly Sessions</label>
+                    <input type="number" class="subject-sessions" value="2" min="1" max="20">
+                </div>
+            </div>
+            
+            <button id="generate-btn">Generate Study Schedule</button>
+         <button id="generate-btn" >print Schedule</button>
+<p id="prints"></p>
+        </div>
+        
+        <div class="schedule-output" id="schedule-output" style="display: none;">
+            <h2>Your Personalized Study Schedule</h2>
+            <div id="schedule-display"></div>
+            
+            <div class="controls">
+                <button class="export-btn" onclick="prin();" >Export as PDF</button>
+                <button class="export-btn">Export as Calendar</button>
+            </div>
+          
+            <div class="stats" style="margin-top: 30px; background-color: #f8f9fa; padding: 15px; border-radius: 4px;">
+                <h3>Schedule Statistics</h3>
+                <div id="schedule-stats"></div>
+            </div>
+        </div>
+    </div>
+<a href="home.html">back to home</a>
+
+    <script>
+        document.getElementById('generate-btn').addEventListener('click', generateSchedule);
+        
+        function generateSchedule() {
+            // Get basic preferences
+            const wakeUpTime = document.getElementById('wake-up').value;
+            const bedtime = document.getElementById('bedtime').value;
+            const studyDuration = parseInt(document.getElementById('study-duration').value);
+            const breakDuration = parseInt(document.getElementById('break-duration').value);
+            const longBreakAfter = parseInt(document.getElementById('long-break').value);
+            const longBreakDuration = parseInt(document.getElementById('long-break-duration').value);
+            
+            // Get class schedule
+            const classDays = Array.from(document.getElementById('class-days').selectedOptions)
+                                .map(option => parseInt(option.value));
+            const classStart = document.getElementById('class-start').value;
+            const classEnd = document.getElementById('class-end').value;
+            
+            // Get subjects data
+            const subjects = [];
+            const subjectCards = document.querySelectorAll('.subject-card');
+            
+            subjectCards.forEach((card, index) => {
+                const name = card.querySelector('h4').textContent;
+                const priority = parseInt(card.querySelector('.subject-priority').value);
+                const sessions = parseInt(card.querySelector('.subject-sessions').value);
+                
+                subjects.push({
+                    id: index + 1,
+                    name: name,
+                    priority: priority,
+                    sessions: sessions,
+                    scheduled: 0
+                });
+            });
+            
+            // Validate inputs
+            if (classDays.length === 0) {
+                alert('Please select at least one class day');
+                return;
+            }
+            
+            // Process and generate schedule
+            const schedule = createWeeklySchedule(
+                wakeUpTime,
+                 bedtime, 
+                 studyDuration,
+                  breakDuration, 
+                longBreakAfter, 
+                longBreakDuration, 
+                classDays, 
+                classStart, 
+                classEnd, 
+                subjects
+            );
+            
+            // Display the schedule
+            displaySchedule(schedule, subjects);
+            
+            // Show the output section
+            document.getElementById('schedule-output').style.display = 'block';
+        }
+        
+        function createWeeklySchedule(wakeUp, bedtime, studyDur, breakDur, 
+                                    longBreakAfter, longBreakDur, classDays, 
+                                    classStart, classEnd, subjects) {
+            // Convert times to minutes since midnight for easier calculations
+            const wakeUpMin = timeToMinutes(wakeUp);
+            const bedtimeMin = timeToMinutes(bedtime);
+            const classStartMin = timeToMinutes(classStart);
+            const classEndMin = timeToMinutes(classEnd);
+            
+            // Create a 7-day schedule
+            const weeklySchedule = [];
+            
+            for (let day = 0; day < 7; day++) {
+                const daySchedule = {
+                    dayName: getDayName(day),
+                    isClassDay: classDays.includes(day),
+                    slots: []
+                };
+                
+                // Calculate available time
+                let currentTime = wakeUpMin;
+                let sessionCount = 0;
+                
+                while (currentTime + studyDur <= bedtimeMin) {
+                    // Check if this is class time
+                    if (daySchedule.isClassDay && 
+                        currentTime >= classStartMin && 
+                        currentTime < classEndMin) {
+                        // Add class time slot
+                        daySchedule.slots.push({
+                            start: minutesToTime(currentTime),
+                            end: minutesToTime(classEndMin),
+                            type: 'class',
+                            subject: 'Class Time'
+                        });
+                        currentTime = classEndMin;
+                        continue;
+                    }
+                    
+                    // Determine if we should schedule a study session or break
+                    if (sessionCount > 0 && sessionCount % longBreakAfter === 0) {
+                        // Long break
+                        daySchedule.slots.push({
+                            start: minutesToTime(currentTime),
+                            end: minutesToTime(currentTime + longBreakDur),
+                            type: 'break',
+                            subject: 'Long Break'
+                        });
+                        currentTime += longBreakDur;
+                    } else if (sessionCount > 0) {
+                        // Short break
+                        daySchedule.slots.push({
+                            start: minutesToTime(currentTime),
+                            end: minutesToTime(currentTime + breakDur),
+                            type: 'break',
+                            subject: 'Short Break'
+                        });
+                        currentTime += breakDur;
+                    }
+                    
+                    // Add study session if there's time
+                    if (currentTime + studyDur <= bedtimeMin) {
+                        // Find the next subject to schedule based on priority and remaining sessions
+                        const nextSubject = findNextSubject(subjects);
+                        
+                        if (nextSubject) {
+                            daySchedule.slots.push({
+                                start: minutesToTime(currentTime),
+                                end: minutesToTime(currentTime + studyDur),
+                                type: 'study',
+                                subject: nextSubject.name
+                            });
+                            nextSubject.scheduled++;
+                            sessionCount++;
+                            currentTime += studyDur;
+                        } else {
+                            // All subjects have their required sessions
+                            break;
+                        }
+                    }
+                }
+                
+                weeklySchedule.push(daySchedule);
+            }
+            
+            return weeklySchedule;
+        }
+        
+        function findNextSubject(subjects) {
+            // Sort subjects by priority (descending) and remaining sessions (descending)
+            const sorted = [...subjects].sort((a, b) => {
+                if (a.priority !== b.priority) {
+                    return b.priority - a.priority;
+                }
+                return (b.sessions - b.scheduled) - (a.sessions - a.scheduled);
+            });
+            
+            // Find the first subject that needs more sessions
+            return sorted.find(subject => subject.scheduled < subject.sessions);
+        }
+        
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        function minutesToTime(totalMinutes) {
+            const hours = Math.floor(totalMinutes / 60);
+            const minutes = totalMinutes % 60;
+            return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+        }
+        
+        function getDayName(dayIndex) {
+            const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+            return days[dayIndex];
+        }
+        
+        function displaySchedule(weeklySchedule, subjects) {
+            let html = '';
+            
+            weeklySchedule.forEach(day => {
+                html += `<div class="schedule-day">
+                    <div class="day-header">${day.dayName} ${day.isClassDay ? '(Class Day)' : ''}</div>`;
+                
+                day.slots.forEach(slot => {
+                    html += `<div class="time-slot">
+                        <div class="time">${slot.start} - ${slot.end}</div>
+                        <div class="activity">
+                            <div class="subject ${slot.type}">${slot.subject}</div>
+                        </div>
+                    </div>`;
+                });
+                
+                html += `</div>`;
+            });
+            
+            document.getElementById('schedule-display').innerHTML = html;
+            
+            // Display statistics
+            let statsHtml = '<p><strong>Subject Distribution:</strong></p><ul>';
+            
+            subjects.forEach(subject => {
+                statsHtml += `<li>${subject.name}: ${subject.scheduled} sessions (${Math.round((subject.scheduled / subject.sessions) * 100)}% of target)</li>`;
+            });
+            
+            statsHtml += '</ul>';
+            document.getElementById('schedule-stats').innerHTML = statsHtml;
+            
+    
+        }
+       
+     
+    </script>
+</body>
+</html>
