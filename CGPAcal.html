@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Calculator</title>
+    <link rel="stylesheet" href="forall.css">
+    <style>
+.container{
+color: rgb(189, 61, 119);
+animation: spin 8s linear infinite;
+margin: 10%;
+    }
+    @keyframes spin{
+    35%{
+   transform: scale(1);   
+   background: url("D:OneDrive/Pictures/slides for background color/Screenshot 2025-05-22 134651.png");
+   background-repeat: none;
+   background-size: cover;
+}
+90%{
+    background: url("D:/OneDrive/Pictures/cover page.jpg");
+    transform: scale(1);
+}
+
+50%{
+background: url("D:/OneDrive/Pictures/slides for background color/Geta.heapsnapshot.png");
+
+
+
+}
+}
+
+
+
+    </style>
+    <script>
+        function prints(){
+     window.print();
+
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Student Grade Calculator</h1>
+            <p>Calculate your average, sum, and CGPA from your subject grades</p>
+        </div>
+    </header>
+    <div class="container">
+        <div class="card">
+            <h2>Enter Your Grades</h2>
+            <div class="form-group">
+                <label for="student-name">Student Name</label>
+                <input type="text" id="student-name" placeholder="Enter your name">
+            </div>
+            <div class="form-group">
+                <label for="semester">Semester</label><!--we can use  multiple="10" to use multiple lins at the same time -->
+                <select id="semester">
+                     <option value="1"> Select Semester </option>
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                    <option value="7">Semester 7</option>
+                    <option value="8">Semester 8</option>
+                </select>
+            </div>
+            
+            <h3>Subjects</h3>
+            <div id="subjects-container">
+                <!-- Subject inputs will be added here -->
+            </div>
+            
+            <div class="action-buttons">
+                <button id="add-subject" class="btn-success">Add Subject</button>
+                <button id="calculate" class="btn-primary">Calculate Results</button>
+                <button id="reset" class="btn-danger">Reset</button>
+            </div>
+        </div>
+        
+        <div class="result-card" id="result-card">
+            <h2>Results for <span id="result-name"></span></h2>
+            <p>Semester: <span id="result-semester"></span></p>
+            <table class="subject-table">
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Grade</th>
+                        <th>Grade Point</th>
+                        <th>Credit Hours</th>
+                    </tr>
+                </thead>
+                <tbody id="result-subjects">
+                    <!-- Subject results will be added here -->
+                </tbody>
+            </table>
+            
+            <div class="result-item">
+                <span class="result-label">Total Score:</span>
+                <span class="result-value" id="total-score">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Average Score:</span>
+                <span class="result-value" id="average-score">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Total Credit Hours:</span>
+                <span class="result-value" id="total-credits">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Total Grade Points:</span>
+                <span class="result-value" id="total-grade-points">0</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">CGPA:</span>
+
+                <span class="result-value cgpa-value" id="cgpa">0.00</span>
+       <input style="border: 4px;border-color: blueviolet;background-color: cornflowerblue;width: fit-content; margin: 10%;" type="submit" onclick="prints()" value="print">
+            </div>
+        </div>
+    </div>
+    <a href="home.html">back to home</a>
+
+    <script>
+        // Grade point mapping
+        const gradePointMap = {
+            'A+': 4.0,
+            'A': 4.0,
+            'A-': 3.75,
+            'B+': 3.5,
+            'B': 3.0,
+            'B-': 2.75,
+            'C+': 2.3,
+            'C': 2.0,
+            'C-': 1.7,
+            'D+': 1.3,
+            'D': 1.0,
+            'F': 0.0
+        };
+        
+        // Grade classification
+        const gradeClassMap = {
+            'A+': 'grade-A',
+            'A': 'grade-A',
+            'A-': 'grade-A',
+            'B+': 'grade-B',
+            'B': 'grade-B',
+            'B-': 'grade-B',
+            'C+': 'grade-C',
+            'C': 'grade-C',
+            'C-': 'grade-C',
+            'D+': 'grade-D',
+            'D': 'grade-D',
+            'F': 'grade-F'
+        };
+        
+        // Default credit hours (can be customized per subject)
+        const defaultCreditHours = 5;
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add initial subject
+            addSubject();
+            // Add subject button
+            document.getElementById('add-subject').addEventListener('click', addSubject);     
+            // Calculate button
+            document.getElementById('calculate').addEventListener('click', calculateResults);  
+            // Reset button
+            document.getElementById('reset').addEventListener('click', resetForm);
+        });
+        function addSubject() {
+            const container = document.getElementById('subjects-container');
+            const subjectCount = container.querySelectorAll('.subject-group').length + 1;         
+            const subjectGroup = document.createElement('div');
+            subjectGroup.className = 'subject-group';
+            subjectGroup.innerHTML = `
+                <div class="form-group">
+                    <label for="subject-name-${subjectCount}">Subject ${subjectCount} Name</label>
+                    <input type="text" id="subject-name-${subjectCount}" class="subject-name" placeholder="Enter subject name">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label for="subject-score-${subjectCount}">Score (0-100)</label>
+                        <input type="number" id="subject-score-${subjectCount}" class="subject-score" min="0" max="100" placeholder="Enter score">
+                    </div>
+                    <div class="form-group">
+                        <label for="subject-credits-${subjectCount}">Credit Hours</label>
+                        <input type="number" id="subject-credits-${subjectCount}" class="subject-credits" min="1" max="5" value="${defaultCreditHours}">
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(subjectGroup);
+        }
+        
+        function calculateResults() {
+            const studentName = document.getElementById('student-name').value.trim();
+            const semester = document.getElementById('semester').value;
+            
+            if (!studentName) {
+                alert('Please enter your name');
+                return;
+            }
+        
+            if (!semester) {
+                alert('Please select your semester');
+                return;
+            }
+            
+            const subjectGroups = document.querySelectorAll('.subject-group');
+            if (subjectGroups.length === 0) {
+                alert('Please add at least one subject');
+                return;
+            }
+            const subjects = [];
+            let totalScore = 0;
+            let totalCredits = 0;
+            let totalGradePoints = 0;
+            let hasInvalidScore = false;
+            subjectGroups.forEach((group, index) => {
+                const name = group.querySelector('.subject-name').value.trim();
+                const score = parseFloat(group.querySelector('.subject-score').value);
+                const credits = parseInt(group.querySelector('.subject-credits').value) || defaultCreditHours;
+                
+                if (!name) {
+                    alert(`Please enter a name for Subject ${index + 1}`);
+                    hasInvalidScore = true;
+                    return;
+                }
+                
+                if (isNaN(score) || score < 0 || score > 100) {
+                    alert(`Please enter a valid score (0-100) for ${name}`);
+                    hasInvalidScore = true;
+                    return;
+                }
+                
+                const grade = getGradeFromScore(score);
+                const gradePoint = gradePointMap[grade];
+                const gradePoints = gradePoint * credits;
+                
+                subjects.push({
+                    name,
+                    score,
+                    grade,
+                    gradePoint,
+                    credits,
+                    gradePoints
+                });
+                
+                totalScore += score;
+                totalCredits += credits;
+                totalGradePoints += gradePoints;
+            });
+            
+            if (hasInvalidScore) return;
+            
+            if (subjects.length === 0) {
+                alert('No valid subjects to calculate');
+                return;
+            }
+            
+            const averageScore = totalScore / subjects.length;
+            const cgpa = totalGradePoints / totalCredits;
+            
+            // Display results
+            displayResults(studentName, semester, subjects, totalScore, averageScore, totalCredits, totalGradePoints, cgpa);
+        }
+        
+        function getGradeFromScore(score) {
+            if (score >= 90) return 'A+';
+            if (score >= 85) return 'A';
+            if (score >= 80) return 'A-';
+            if (score >= 75) return 'B+';
+            if (score >= 70) return 'B';
+            if (score >= 65) return 'B-';
+            if (score >= 60) return 'C+';
+            if (score >= 55) return 'C';
+            if (score >= 50) return 'C-';
+            if (score >= 45) return 'D+';
+            if (score >= 40) return 'D';
+            if (score >= 35) return 'F';
+            return 'F';
+        }
+        
+        function displayResults(name, semester, subjects, totalScore, averageScore, totalCredits, totalGradePoints, cgpa) {
+            document.getElementById('result-name').textContent = name;
+            document.getElementById('result-semester').textContent = semester;
+            
+            const resultSubjects = document.getElementById('result-subjects');
+            resultSubjects.innerHTML = '';
+            
+            subjects.forEach(subject => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${subject.name}</td>
+                    <td>${subject.score.toFixed(2)}</td>
+                    <td class="${gradeClassMap[subject.grade]}">${subject.grade}</td>
+                    <td>${subject.gradePoint.toFixed(2)}</td>
+                    <td>${subject.credits}</td>
+                `;
+                resultSubjects.appendChild(row);
+            });
+            
+            document.getElementById('total-score').textContent = totalScore.toFixed(2);
+            document.getElementById('average-score').textContent = averageScore.toFixed(2);
+            document.getElementById('total-credits').textContent = totalCredits;
+            document.getElementById('total-grade-points').textContent = totalGradePoints.toFixed(2);
+            document.getElementById('cgpa').textContent = cgpa.toFixed(2);
+            
+            document.getElementById('result-card').style.display = 'block';
+        }
+        
+        function resetForm() {
+            document.getElementById('student-name').value = '';
+            document.getElementById('semester').value = '';
+            document.getElementById('subjects-container').innerHTML = '';
+            document.getElementById('result-card').style.display = 'none';
+            
+            // Add one subject back after reset
+            addSubject();
+        }
+    </script>
+</body>
+</html>
