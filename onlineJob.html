@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethio Investment Platform</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        
+        .investment-plans {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .plan {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 30%;
+            min-width: 300px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .plan:hover {
+            transform: translateY(-10px);
+        }
+        
+        .plan h3 {
+            color: #2c3e50;
+            border-bottom: 2px solid #eaeaea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .plan .price {
+            font-size: 2em;
+            color: #27ae60;
+            margin: 20px 0;
+        }
+        
+        .plan .profit {
+            font-size: 1.5em;
+            color: #e74c3c;
+            margin: 15px 0;
+        }
+        
+        .plan .duration {
+            color: #7f8c8d;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #27ae60;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: background 0.3s;
+        }
+        
+        .btn:hover {
+            background: #219653;
+        }
+        
+        .payment-section {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            display: none;
+        }
+        
+        .payment-section h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        
+        .bank-details {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        
+        .bank-details h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .plan {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Gebeze Investment </h1>
+            <p>Grow your money with our secure investment plans</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <h2>Our Investment Plans</h2>
+        <p>Choose a plan that suits your financial goals</p>
+        
+        <div class="investment-plans">
+            <div class="plan">
+                <h3>Basic Plan</h3>
+                <div class="price">300 Birr</div>
+                <div class="profit">+200 Birr Profit</div>
+                <div class="duration">Weekly Returns</div>
+                <p>Perfect for beginners who want to test our platform</p>
+                <button class="btn invest-btn" data-plan="basic">Invest Now</button>
+            </div>
+            
+            <div class="plan">
+                <h3>Standard Plan</h3>
+                <div class="price">1000 Birr</div>
+                <div class="profit">+500 Birr Profit</div>
+                <div class="duration">Every 2 Weeks</div>
+                <p>Great for consistent growth with moderate investment</p>
+                <button class="btn invest-btn" data-plan="standard">Invest Now</button>
+            </div>
+            
+            <div class="plan">
+                <h3>Premium Plan</h3>
+                <div class="price">3000 Birr</div>
+                <div class="profit">+1000 Birr Profit</div>
+                <div class="duration">Every 3 Weeks</div>
+                <p>Maximum returns for serious investors</p>
+                <button class="btn invest-btn" data-plan="premium">Invest Now</button>
+            </div>
+        </div>
+        
+        <div id="paymentForm" class="payment-section">
+            <h2>Complete Your Investment</h2>
+            <form id="investmentForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="selectedPlan">Selected Plan</label>
+                    <input type="text" id="selectedPlan" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="investmentAmount">Investment Amount (Birr)</label>
+                    <input type="number" id="investmentAmount" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="expectedProfit">Expected Weekly Profit (Birr)</label>
+                    <input type="number" id="expectedProfit" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod">Payment Method</label>
+                    <select id="paymentMethod" required>
+                        <option value="">Select payment method</option>
+                        <option value="cbe">Commercial Bank of Ethiopia</option>
+                        <option value="awash">Awash Bank</option>
+                        <option value="dashen">Dashen Bank</option>
+                        <option value="telebirr">Telebirr</option>
+                    </select>
+                </div>
+                <div class="bank-details">
+                    <h3>Bank Transfer Instructions</h3>
+                    <p>Please transfer your investment amount to the following account:</p>
+                    <p><strong>Bank:</strong> Commercial Bank of Ethiopia</p>
+                    <p><strong>Account Name:</strong> Gebeze Investment PLC</p>
+                    <p><strong>Account Number:</strong> 100034567890</p>
+                    <p>After making the transfer, please upload your receipt below.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentProof">Upload Payment Proof (Receipt)</label>
+                    <input type="file" id="paymentProof" accept="image/*,.pdf" required>
+                </div>
+                <button type="submit" class="btn">Submit Investment</button>
+            </form>
+        </div>
+        
+        <div id="thankYou" style="display: none; text-align: center; padding: 40px; background: white; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h2>Thank You for Your Investment!</h2>
+            <p>We have received your investment details and payment information.</p>
+            <p>Our team will verify your payment and activate your investment within 24 hours.</p>
+            <p>You will receive a confirmation email with your investment details.</p>
+            <button class="btn" onclick="location.reload()">Make Another Investment</button>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+                        <p>Contact: <br><p>Email: getu@Gebeze.com </p> <br> <p>Phone +251 928 30 8307 </p></p>
+            <p>&copy; 2025 Gebeze Investment Platform. All rights reserved.</p>
+        </div>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const investButtons=document.querySelectorAll('.invest-btn');
+            const paymentSection=document.getElementById('paymentForm');
+            const selectedPlanInput=document.getElementById('selectedPlan');
+            const investmentAmountInput=document.getElementById('investmentAmount');
+            const expectedProfitInput=document.getElementById('expectedProfit');
+            const investmentForm=document.getElementById('investmentForm');
+            const thankYouSection=document.getElementById('thankYou');
+            investButtons.forEach(button =>{
+                button.addEventListener('click',function(){
+                    const plan = this.getAttribute('data-plan');
+                    switch(plan) {
+                        case 'basic':
+                            selectedPlanInput.value = 'Basic Plan';
+                            investmentAmountInput.value = '300';
+                            expectedProfitInput.value = '200';
+                            break;
+                        case 'standard':
+                            selectedPlanInput.value = 'Standard Plan';
+                            investmentAmountInput.value = '1000';
+                            expectedProfitInput.value = '500';
+                            break;
+                        case 'premium':
+                            selectedPlanInput.value = 'Premium Plan';
+                            investmentAmountInput.value = '3000';
+                            expectedProfitInput.value = '1000';
+                            break;
+                    }
+                    
+                    paymentSection.style.display = 'block';
+                    window.scrollTo({
+                        top: paymentSection.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            investmentForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Here you would typically send the form data to your server
+                // For this demo, we'll just show the thank you message
+                
+                paymentSection.style.display = 'none';
+                thankYouSection.style.display = 'block';
+                window.scrollTo({
+                    top: thankYouSection.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+                // Reset form
+                investmentForm.reset();
+            });
+        });
+    </script>
+</body>
+</html>
